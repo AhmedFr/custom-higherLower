@@ -189,14 +189,14 @@ export default function Home() {
       <section className="flex flex-col gap-12 py-24">
         <h1 className="text-center text-6xl font-bold">How to play ?</h1>
         <div className="px-20 w-full grid grid-cols-3 gap-4">
-          <div className="border h-40 p-4 rounded-lg border-slate-300 shadow-lg">
+          <div className="border h-60 p-4 rounded-lg border-slate-300 shadow-lg">
             <h1 className="pb-1 text-2xl font-bold">1 - Find a category</h1>
             <p>
               Find a category you like or want to discover. Each category has a
               description and the values metric.
             </p>
           </div>
-          <div className="border h-40 p-4 rounded-lg border-slate-300 shadow-lg">
+          <div className="border h-60 p-4 rounded-lg border-slate-300 shadow-lg">
             <h1 className="pb-1 text-2xl font-bold">2 - Goal</h1>
             <p>
               Your goal will be to compare the value of the item on the left
@@ -204,7 +204,7 @@ export default function Home() {
               answers.
             </p>
           </div>
-          <div className="border h-40 p-4 rounded-lg border-slate-300 shadow-lg">
+          <div className="border h-60 p-4 rounded-lg border-slate-300 shadow-lg">
             <h1 className="pb-1 text-2xl font-bold">3 - How ?</h1>
             <p>
               If you think the value of the item on the right is higher, click
@@ -212,18 +212,19 @@ export default function Home() {
               the right is lower, click on the arrow pointing down.
             </p>
           </div>
-          <div className="border h-40 p-4 rounded-lg border-slate-300 shadow-lg">
+          <div className="border h-60 p-4 rounded-lg border-slate-300 shadow-lg">
             <h1 className="pb-1 text-2xl font-bold">4 - Score</h1>
             <p>
               Every good answer is a point, get the longest streak and rank
               first !
             </p>
           </div>
-          <div className="flex justify-between bg-gradient-to-r items-center h-40 from-blue-600 col-span-2 text-white to-white border px-12 py-4 rounded-lg border-slate-300 shadow-lg">
+          <div className="flex justify-between bg-gradient-to-r items-center h-60 from-emerald-600 col-span-2 text-white to-white border px-12 py-4 rounded-lg border-slate-300 shadow-lg">
             <h1 className="text-2xl font-bold ">
-              Now that you know everything, have fun !
+              Now that you know everything,
+              <br /> have fun !
             </h1>
-            <Button size="lg" className="bg-blue-600 hover:bg-blue-500">
+            <Button size="lg" className="bg-emerald-600 hover:bg-emerald-500">
               <Link href="/categories">Play</Link>
             </Button>
           </div>

@@ -57,6 +57,9 @@ module.exports = {
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)",
       },
+      dropShadow: {
+        blue: "0px 4px 8px rgba(0, 0, 178, 0.2)",
+      },
       keyframes: {
         "accordion-down": {
           from: { height: "0" },
