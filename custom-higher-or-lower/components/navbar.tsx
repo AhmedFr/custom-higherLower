@@ -14,13 +14,14 @@ import { User, LogOut, PlusSquare } from "lucide-react";
 export function Navbar() {
   const isConnected = true;
   const username = "Ahmed2312";
+  const userAvatar = "https://avatars.githubusercontent.com/u/50470012?v=4";
 
   function handleSignout() {
     console.log("Sign out");
   }
 
   return (
-    <div className="absolute top-0 items-center left-0 px-10 py-4 right-0 flex justify-between">
+    <div className="absolute top-0 items-center h-20 left-0 px-10 py-4 right-0 flex justify-between">
       <div className="flex items-end gap-2">
         <Link className="text-2xl font-bold" href="/">
           HigherOrLower
@@ -37,10 +38,7 @@ export function Navbar() {
           <DropdownMenuTrigger>
             <Button className="gap-1">
               <Avatar className="w-5 h-5">
-                <AvatarImage
-                  src="https://avatars.githubusercontent.com/u/50470012?v=4"
-                  alt={username}
-                />
+                <AvatarImage src={userAvatar} alt={username} />
                 <AvatarFallback>{username[0]}</AvatarFallback>
               </Avatar>
               {username}
@@ -70,7 +68,9 @@ export function Navbar() {
           </DropdownMenuContent>
         </DropdownMenu>
       ) : (
-        <Button>Sign up</Button>
+        <Button>
+          <Link href="/login">Login</Link>
+        </Button>
       )}
     </div>
   );
