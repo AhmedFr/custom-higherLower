@@ -32,7 +32,7 @@ export default function Page({ params }: { params: { slug: string } }) {
   });
 
   const heroTextCss =
-    "bg-[length:200%_auto] italic px-2 font-extrabold bg-[linear-gradient(to_right,theme(colors.indigo.400),theme(colors.indigo.100),theme(colors.sky.400),theme(colors.fuchsia.400),theme(colors.sky.400),theme(colors.indigo.100),theme(colors.indigo.400))] text-2xl text-transparent  bg-clip-text animate-gradient";
+    "w-72 h-16 bg-[length:200%_auto] italic px-2 font-extrabold bg-[linear-gradient(to_right,theme(colors.indigo.400),theme(colors.indigo.100),theme(colors.sky.400),theme(colors.fuchsia.400),theme(colors.sky.400),theme(colors.indigo.100),theme(colors.indigo.400))] text-2xl text-transparent  bg-clip-text animate-gradient";
 
   const highscores = [
     {
@@ -103,14 +103,12 @@ export default function Page({ params }: { params: { slug: string } }) {
         </div>
         <div className="flex shadow-xl flex-col h-full text-white px-8 w-full py-8 rounded-lg justify-between items-center border border-slate-300 bg-gradient-to-b from-indigo-400 to-white">
           <h2 className="text-3xl text-center font-bold">Ready to play ?</h2>
-          <Button className="w-72 h-16">
-            <Link
-              className={heroTextCss}
-              href={`/play/${fetchedCategory.slug}`}
-            >
-              Play
-            </Link>
-          </Button>
+          <Link
+            className="bg-slate-900 rounded-xl"
+            href={`/play/${fetchedCategory.slug}`}
+          >
+            <Button className={heroTextCss}>Play</Button>
+          </Link>
         </div>
         <Leaderboard users={highscores} />
       </div>

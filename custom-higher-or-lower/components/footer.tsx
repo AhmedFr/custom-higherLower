@@ -9,7 +9,9 @@ export function Footer() {
       <div className="flex gap-4">
         <Link href="/tos">Terms of Service</Link>
         <Link href="/privacy">Privacy Policy</Link>
-        <Link href="https://github.com/AhmedFr">Contact me</Link>
+        <Link target="_blank" href="https://github.com/AhmedFr">
+          Contact me
+        </Link>
       </div>
     </div>
   );
