@@ -17,6 +17,12 @@ var scoreRouter = require('./routes/score');
 var likeRouter = require('./routes/like');
 var valuesRouter = require('./routes/values');
 
+const sequelize = require('./config/sequelize');
+const User = require('./models/User');
+const Category = require('./models/Category');
+const Value = require('./models/Value');
+const Score = require('./models/Score');
+
 var app = express();
 
 // view engine setup
@@ -56,5 +62,18 @@ app.use(function(err, req, res, next) {
   res.status(err.status || 500);
   res.render('error');
 });
+
+async function init() {
+  try {
+    await sequelize.authenticate();
+    await sequelize.sync();
+    console.log('Connection has been established successfully.');
+    console.log('Synced models successfully.');
+  } catch (error) {
+    console.error('Unable to connect to the database:', error);
+  }
+}
+
+init();
 
 module.exports = app;

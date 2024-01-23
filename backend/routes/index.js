@@ -1,6 +1,6 @@
 var express = require('express');
 var router = express.Router();
-var sequelize = require("../db");
+var sequelize = require("../config/sequelize");
 
 router.get('/', async function(req, res, next) {
   try {
