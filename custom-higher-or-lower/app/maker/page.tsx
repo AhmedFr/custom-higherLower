@@ -30,12 +30,12 @@ type Value = {
 
 const formSchema = z.object({
   name: z.string().min(2).max(20),
-  description: z.string().min(2).max(50),
+  description: z.string().min(2).max(100),
   cover_image: z.string().url(),
   values: z.array(
     z.object({
-      name: z.string().min(2).max(20),
-      value: z.number().min(1).max(100),
+      name: z.string().min(2).max(50),
+      value: z.number().min(1).max(16),
       image_url: z.string().url().optional(),
     }),
   ),

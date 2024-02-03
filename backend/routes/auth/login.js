@@ -27,7 +27,11 @@ router.post("/", async function (req, res, next) {
       res.status(400).send("Invalid password");
       return;
     }
-    const accessToken = generateAccessToken({ email: req.body.email });
+    const accessToken = generateAccessToken({
+      email: req.body.email,
+      username: user.dataValues.username,
+      id: user.dataValues.id,
+    });
     res.status(200).send({
       email: user.dataValues.email,
       username: user.dataValues.username,

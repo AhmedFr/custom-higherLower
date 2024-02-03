@@ -15,13 +15,13 @@ Category.init(
       type: DataTypes.STRING,
       unique: true,
       allowNull: false,
-      validate: { len: [3, 25], isAlphanumeric: true },
+      validate: { len: [3, 25] },
     },
     slug: {
       type: DataTypes.STRING,
       unique: true,
       allowNull: false,
-      validate: { len: [3, 25], isAlphanumeric: true },
+      validate: { len: [3, 25] },
     },
     description: {
       type: DataTypes.STRING,

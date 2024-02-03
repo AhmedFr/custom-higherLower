@@ -21,7 +21,6 @@ router.post("/", async function (req, res, next) {
 
     const hashedPassword = await bcrypt.hash(req.body.password, salt);
     const refreshToken = generateRefreshToken({ email: req.body.email });
-    const accessToken = generateAccessToken({ email: req.body.email });
     const gravatarHash = crypto
       .createHash("sha256")
       .update(req.body.email.toLowerCase())
@@ -35,6 +34,11 @@ router.post("/", async function (req, res, next) {
       image: `https://www.gravatar.com/avatar/${gravatarHash}?d=identicon`,
     });
 
+    const accessToken = generateAccessToken({
+      email: req.body.email,
+      username: req.body.username,
+      id: newUser.dataValues.id,
+    });
     res.status(201).send({
       email: newUser.dataValues.email,
       username: newUser.dataValues.username,
