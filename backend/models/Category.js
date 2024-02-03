@@ -33,10 +33,6 @@ Category.init(
       type: DataTypes.STRING,
       defaultValue: "unsplash",
     },
-    likes: {
-      type: DataTypes.INTEGER,
-      defaultValue: 0,
-    },
     author_id: {
       type: DataTypes.UUID,
       allowNull: false,

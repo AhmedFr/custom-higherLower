@@ -6,6 +6,7 @@ const Category = require("../models/Category");
 const User = require("../models/User");
 const Score = require("../models/Score");
 const Value = require("../models/Value");
+const Like = require("../models/Like");
 
 router.get("/", async function (req, res, next) {
   const category_slug = req.query.slug;
@@ -49,6 +50,12 @@ router.get("/", async function (req, res, next) {
       };
     });
 
+    const likes = await Like.count({
+      where: {
+        category_id: category.dataValues.id,
+      },
+    });
+
     const total_values = await Value.count({
       where: {
         category_id: category.dataValues.id,
@@ -59,7 +66,7 @@ router.get("/", async function (req, res, next) {
       name: category.dataValues.name,
       description: category.dataValues.description,
       image: category.dataValues.image,
-      likes: category.dataValues.likes,
+      likes: likes,
       created_at: category.dataValues.createdAt,
       total_values,
       author_username: author.dataValues.username,
@@ -71,7 +78,7 @@ router.get("/", async function (req, res, next) {
 });
 
 router.post("/", async function (req, res, next) {
-  const user = await isAuthorized(req, res, next);
+  const user = isAuthorized(req, res, next);
   if (!user) {
     res.status(401).send("Unauthorized");
     return;
