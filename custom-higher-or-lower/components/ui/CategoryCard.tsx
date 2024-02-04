@@ -1,15 +1,17 @@
-import { Category } from "@/app/categories/page";
 import Image from "next/image";
 import { Badge } from "@/components/ui/badge";
 import { ThumbsUp, User } from "lucide-react";
 import Link from "next/link";
+import { Category } from "@/types/Category";
+import { Avatar } from "@/components/ui/avatar";
+import { AvatarFallback, AvatarImage } from "@radix-ui/react-avatar";
 
 export function CategoryCard({
   name,
   slug,
   description,
   likes,
-  cover_image,
+  image,
   author,
 }: Category) {
   return (
@@ -18,18 +20,21 @@ export function CategoryCard({
       className="transition-all h-80 duration-300 border rounded-lg border-slate-300 shadow hover:shadow-lg py-2"
     >
       <div className="relative w-full h-44">
-        <Image src={cover_image} alt={name} fill className="w-full" />
+        <Image src={image} alt={name} fill className="w-full" />
       </div>
       <div className="px-4">
         <h3 className="text-lg truncate font-bold pt-1">{name}</h3>
         <p className="text-slate-400 h-16 text-sm">{description}</p>
         <div className="flex items-center justify-between">
-          <Badge variant="outline" className="gap-1 items-center">
-            <User size={12} />
-            {author.name}
+          <Badge variant="outline" className="flex gap-1 items-center">
+            <Avatar className="w-3 h-3">
+              <AvatarImage src={author.image} alt={author.username} />
+              <AvatarFallback>{author.username[0]}</AvatarFallback>
+            </Avatar>
+            {author.username}
           </Badge>
-          <Badge className="gap-1 items-center">
-            {likes}
+          <Badge className="flex gap-1 items-center">
+            {likes ?? 0}
             <ThumbsUp size={12} />
           </Badge>
         </div>

@@ -14,6 +14,7 @@ import { api } from "@/redux/services/api";
 import { WebStorage } from "redux-persist/lib/types";
 import createWebStorage from "redux-persist/lib/storage/createWebStorage";
 import userReducer from "@/redux/features/userSlice";
+import categoryReducer from "@/redux/features/categorySlice";
 
 const createStorage = (): WebStorage => {
   const isServer: boolean = typeof window === "undefined";
@@ -42,6 +43,7 @@ const persistConfig = {
 
 const reducers = combineReducers({
   user: userReducer,
+  category: categoryReducer,
   [api.reducerPath]: api.reducer,
 });
 const persistedReducers = persistReducer(persistConfig, reducers);

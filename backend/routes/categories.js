@@ -3,6 +3,8 @@ var categoriesRouter = express.Router();
 const Category = require("../models/Category");
 const { Op } = require("sequelize");
 const sequelize = require("../config/sequelize");
+const User = require("../models/User");
+const Like = require("../models/Like");
 
 const CATEGORIES_MAX_LIMIT = 12;
 
@@ -37,7 +39,6 @@ categoriesRouter.get("/", async function (req, res, next) {
     return;
   }
 
-  console.log({ search, limit, page, sort_by, order });
   try {
     const categories = await Category.findAll({
       where: {
@@ -49,6 +50,24 @@ categoriesRouter.get("/", async function (req, res, next) {
       offset: (page - 1) * limit,
       order: sequelize.col(sort_by, order),
     });
+
+    for (let i = 0; i < categories.length; i++) {
+      const user = await User.findOne({
+        where: { id: categories[i].dataValues.author_id },
+      });
+      if (!user) {
+        res.status(500).send("Error fetching categories");
+        return;
+      }
+      categories[i].dataValues.author = {
+        username: user.dataValues.username,
+        image: user.dataValues.image,
+      };
+      const likes = await Like.count({
+        where: { category_id: categories[i].dataValues.id },
+      });
+      categories[i].dataValues.likes = likes;
+    }
 
     res.status(200).send({
       total: categories.length,

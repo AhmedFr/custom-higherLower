@@ -1,22 +1,11 @@
-import { User } from "@/app/categories/page";
 import { Separator } from "@/components/ui/separator";
-
-type UserScore = {
-  id: number;
-  name: string;
-  avatar: string;
-  score: number;
-};
-
-type LeaderBoardProps = {
-  users: UserScore[];
-};
+import { Score } from "@/types/Score";
 
 type LeaderBoardCss = {
   [key: string]: string;
 };
 
-export function Leaderboard({ users }: LeaderBoardProps) {
+export function Leaderboard({ scores }: { scores: Score[] }) {
   const rankingCss: LeaderBoardCss = {
     1: " text-yellow-500 hover:bg-yellow-100",
     2: " text-gray-500",
@@ -35,7 +24,7 @@ export function Leaderboard({ users }: LeaderBoardProps) {
       </div>
       <Separator orientation="horizontal" className="mb-2" />
       <div className="flex flex-col gap-2 ">
-        {users.map((user, i) => (
+        {scores.map((score: Score, i) => (
           <>
             <div
               key={i}
@@ -47,14 +36,21 @@ export function Leaderboard({ users }: LeaderBoardProps) {
               <div className="flex gap-1 items-center">
                 <div className="text-2xl font-bold">{i + 1}</div>
                 <div className="text-xl">
-                  {user.name} {userEmoji[i + 1]}
+                  {score.username} {userEmoji[i + 1]}
                 </div>
               </div>
-              <p className="">{user.score}</p>
+              <p className="">{score.value}</p>
             </div>
-            {i + 1 < users.length ? <Separator orientation="horizontal" /> : ""}
+            {i + 1 < scores.length ? (
+              <Separator orientation="horizontal" />
+            ) : (
+              ""
+            )}
           </>
         ))}
+        {scores.length === 0 && (
+          <div className="text-center text-gray-500">No scores yet</div>
+        )}
       </div>
     </div>
   );

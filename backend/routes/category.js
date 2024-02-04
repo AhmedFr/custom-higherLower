@@ -29,7 +29,7 @@ router.get("/", async function (req, res, next) {
       where: {
         id: category.dataValues.author_id,
       },
-      attributes: ["username"],
+      attributes: ["username", "image"],
     });
     if (!author) {
       res.status(400).send("Author not found");
@@ -67,10 +67,13 @@ router.get("/", async function (req, res, next) {
       description: category.dataValues.description,
       image: category.dataValues.image,
       likes: likes,
-      created_at: category.dataValues.createdAt,
+      createdAt: category.dataValues.createdAt,
       total_values,
-      author_username: author.dataValues.username,
-      high_scores: formattedScores ?? [],
+      author: {
+        username: author.dataValues.username,
+        image: author.dataValues.image,
+      },
+      highScores: formattedScores ?? [],
     });
   } catch (error) {
     res.status(400).send({ error });
