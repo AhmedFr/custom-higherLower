@@ -1,3 +1,4 @@
+import { Item } from "@/types/Item";
 import { Score } from "@/types/Score";
 
 export type Category = {
@@ -9,6 +10,7 @@ export type Category = {
   createdAt: string;
   updatedAt: string;
   likes: number;
+  metric: string;
   author_id: number;
   default_image_provider: string;
   total_values?: number;
@@ -36,6 +38,17 @@ export type GetCategoriesResponse = {
 
 export type GetCategoryRequest = {
   slug: string;
+};
+
+export type GetCategoryValuesRequest = {
+  category_slug: string;
+};
+
+export type GetCategoryValuesResponse = {
+  total: number;
+  page: number;
+  initial_item: Item;
+  values: Item[];
 };
 
 export type GetCategoryResponse = Category;

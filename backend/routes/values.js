@@ -6,8 +6,8 @@ const sequelize = require("../config/sequelize");
 const VALUES_MAX_LIMIT = 12;
 
 router.get("/", async function (req, res, next) {
-  const category_id = req.query.category_id;
-  if (!category_id) {
+  const slug = req.query.category_slug;
+  if (!slug) {
     res.status(400).send("Category id required");
     return;
   }
@@ -15,7 +15,7 @@ router.get("/", async function (req, res, next) {
   try {
     const category = await Category.findOne({
       where: {
-        id: category_id,
+        slug: slug,
       },
     });
     if (!category) {
@@ -25,7 +25,7 @@ router.get("/", async function (req, res, next) {
 
     const values = await Value.findAll({
       where: {
-        category_id: category_id,
+        category_id: category.id,
       },
       attributes: ["name", "image", "id"],
       limit: VALUES_MAX_LIMIT,
@@ -34,7 +34,7 @@ router.get("/", async function (req, res, next) {
 
     const initial_item = await Value.findOne({
       where: {
-        category_id: category_id,
+        category_id: category.id,
       },
       attributes: ["id", "name", "image", "value"],
       order: sequelize.random(),

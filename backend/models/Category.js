@@ -26,6 +26,11 @@ Category.init(
     description: {
       type: DataTypes.STRING,
     },
+    metric: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate: { len: [1, 25] },
+    },
     image: {
       type: DataTypes.STRING,
     },
