@@ -5,26 +5,18 @@ const bcrypt = require("bcrypt");
 const { generateAccessToken } = require("../../utils/tokens");
 
 router.post("/", async function (req, res, next) {
-  if (!req.body.email || !req.body.password) {
-    res.status(400).send("Email and password are required");
+  if (!req.body.refreshToken) {
+    res.status(400).send("Refresh token is required");
     return;
   }
   try {
     const user = await User.findOne({
       where: {
-        email: req.body.email.toLowerCase(),
+        refreshToken: req.body.refreshToken,
       },
     });
     if (!user) {
-      res.status(400).send("User not found");
-      return;
-    }
-    const validPassword = await bcrypt.compare(
-      req.body.password,
-      user.dataValues.password,
-    );
-    if (!validPassword) {
-      res.status(400).send("Invalid password");
+      res.status(400).send("Invalid refresh token");
       return;
     }
     const accessToken = generateAccessToken({
@@ -44,7 +36,7 @@ router.post("/", async function (req, res, next) {
       res.status(400).send(error.errors[0].message);
       return;
     }
-    res.status(400).send(error);
+    res.status(400).send("Could not refresh token");
   }
 });
 

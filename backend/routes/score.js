@@ -1,6 +1,6 @@
 var express = require("express");
 var router = express.Router();
-const { isAuthorized } = require("../utils/isAutorized");
+const { isAuthorized } = require("../utils/isAuthorized");
 const Score = require("../models/Score");
 
 router.post("/", async function (req, res, next) {

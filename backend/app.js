@@ -3,6 +3,7 @@ var express = require("express");
 var path = require("path");
 var cookieParser = require("cookie-parser");
 var logger = require("morgan");
+const cors = require("cors");
 
 var indexRouter = require("./routes/index");
 var categoriesRouter = require("./routes/categories");
@@ -16,14 +17,20 @@ var playRouter = require("./routes/play");
 var scoreRouter = require("./routes/score");
 var likeRouter = require("./routes/like");
 var valuesRouter = require("./routes/values");
+var refreshRouter = require("./routes/auth/refresh");
 
 const sequelize = require("./config/sequelize");
-const User = require("./models/User");
-const Category = require("./models/Category");
-const Value = require("./models/Value");
-const Score = require("./models/Score");
 
 var app = express();
+
+app.use(cors());
+
+const corsOptions = {
+  origin: "http://localhost:3000",
+  credentials: true,
+};
+
+app.options(corsOptions, cors());
 
 // view engine setup
 app.set("views", path.join(__dirname, "views"));
@@ -40,6 +47,7 @@ app.use("/auth/login", loginRouter);
 app.use("/auth/register", registerRouter);
 app.use("/auth/forgot-password", forgotPasswordRouter);
 app.use("/auth/new-password", newPasswordRouter);
+app.use("/auth/refresh", refreshRouter);
 app.use("/categories", categoriesRouter);
 app.use("/category", categoryRouter);
 app.use("/play", playRouter);

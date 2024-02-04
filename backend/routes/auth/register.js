@@ -20,14 +20,16 @@ router.post("/", async function (req, res, next) {
     }
 
     const hashedPassword = await bcrypt.hash(req.body.password, salt);
-    const refreshToken = generateRefreshToken({ email: req.body.email });
+    const refreshToken = generateRefreshToken({
+      email: req.body.email.toLowerCase(),
+    });
     const gravatarHash = crypto
       .createHash("sha256")
       .update(req.body.email.toLowerCase())
       .digest("hex");
 
     const newUser = await User.create({
-      email: req.body.email,
+      email: req.body.email.toLowerCase(),
       username: req.body.username,
       password: hashedPassword,
       refreshToken: refreshToken,
@@ -35,7 +37,7 @@ router.post("/", async function (req, res, next) {
     });
 
     const accessToken = generateAccessToken({
-      email: req.body.email,
+      email: req.body.email.toLowerCase(),
       username: req.body.username,
       id: newUser.dataValues.id,
     });
