@@ -23,27 +23,27 @@ import { useForm } from "react-hook-form";
 import { Form, FormField } from "@/components/ui/form";
 import { usePathname, useSearchParams } from "next/navigation";
 
-const SORT_OPTIONS = ["likes", "createdAt"];
+const SORT_OPTIONS = ["createdAt"];
 const ORDER_OPTIONS = ["ASC", "DESC"];
 const CATEGORIES_PER_PAGE = 12;
 
 const formSchema = z.object({
   search: z.string(),
-  sort: z.enum(["likes", "createdAt"]),
+  sort: z.enum(["createdAt"]),
   order: z.enum(["ASC", "DESC"]),
 });
 
 export default function CategoriesPage() {
   const searchParams = useSearchParams();
   const [search, setSearch] = useState(searchParams.get("search") || "");
-  const [sort, setSort] = useState<"likes" | "createdAt">("likes");
+  const [sort, setSort] = useState<"createdAt">("createdAt");
   const [order, setOrder] = useState<"ASC" | "DESC">("DESC");
   const pathname = usePathname();
 
   const urlSort = searchParams.get("sort");
   const urlOrder = searchParams.get("order");
   if (urlSort && SORT_OPTIONS.includes(urlSort)) {
-    setSort(urlSort as "likes" | "createdAt");
+    setSort(urlSort as "createdAt");
   }
   if (urlOrder && ORDER_OPTIONS.includes(urlOrder)) {
     setOrder(urlOrder as "ASC" | "DESC");
@@ -114,14 +114,6 @@ export default function CategoriesPage() {
                 control={form.control}
                 render={() => (
                   <ToggleGroup value={sort} type="single">
-                    <ToggleGroupItem
-                      onClick={() => {
-                        setSort("likes");
-                      }}
-                      value="likes"
-                    >
-                      Likes
-                    </ToggleGroupItem>
                     <ToggleGroupItem
                       onClick={() => {
                         setSort("createdAt");

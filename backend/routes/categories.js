@@ -8,14 +8,14 @@ const Like = require("../models/Like");
 
 const CATEGORIES_MAX_LIMIT = 12;
 
-const SORT_TYPES = ["likes", "createdAt"];
+const SORT_TYPES = ["createdAt"];
 
 const ORDER_TYPES = ["ASC", "DESC"];
 
 categoriesRouter.get("/", async function (req, res, next) {
   const limit = req.query.limit ?? CATEGORIES_MAX_LIMIT;
   const page = req.query.page ?? 1;
-  const sort_by = req.query.sort_by ?? "likes";
+  const sort_by = req.query.sort_by ?? "createdAt";
   const order = req.query.order ?? "DESC";
   const search = req.query.search?.toLowerCase() ?? "";
 
@@ -76,7 +76,6 @@ categoriesRouter.get("/", async function (req, res, next) {
       categories: categories,
     });
   } catch (error) {
-    console.log(error);
     res.status(500).send("Error fetching categories");
   }
 });

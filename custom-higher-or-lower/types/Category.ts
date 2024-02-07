@@ -2,7 +2,7 @@ import { Item } from "@/types/Item";
 import { Score } from "@/types/Score";
 
 export type Category = {
-  id: number;
+  id: string;
   name: string;
   slug: string;
   description: string;
@@ -12,7 +12,6 @@ export type Category = {
   likes: number;
   metric: string;
   author_id: number;
-  default_image_provider: string;
   total_values?: number;
   highScores?: Score[];
   author: {
@@ -52,3 +51,41 @@ export type GetCategoryValuesResponse = {
 };
 
 export type GetCategoryResponse = Category;
+
+export type UserItem = {
+  name: string;
+  value: number;
+};
+
+export type CreateCategoryRequest = {
+  name: string;
+  description: string;
+  image: string;
+  metric: string;
+  values: UserItem[];
+};
+
+export type CreateCategoryResponse = {
+  success: boolean;
+  category: Category;
+};
+
+export type PlayRequest = {
+  item_id: string;
+  next_item_id: string;
+  guess: "higher" | "lower";
+};
+
+export type PlayResponse = {
+  success: boolean;
+  next_item: Item;
+};
+
+export type SetScoreRequest = {
+  category_id: string;
+  score: number;
+};
+
+export type SetScoreResponse = {
+  success: boolean;
+};

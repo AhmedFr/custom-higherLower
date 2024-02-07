@@ -1,11 +1,17 @@
 import { api } from "@/redux/services/api";
 import {
+  CreateCategoryRequest,
+  CreateCategoryResponse,
   GetCategoriesRequest,
   GetCategoriesResponse,
   GetCategoryRequest,
   GetCategoryResponse,
   GetCategoryValuesRequest,
   GetCategoryValuesResponse,
+  PlayRequest,
+  PlayResponse,
+  SetScoreRequest,
+  SetScoreResponse,
 } from "@/types/Category";
 
 export const categoryApi = api.injectEndpoints({
@@ -31,6 +37,32 @@ export const categoryApi = api.injectEndpoints({
         url: `/values?category_slug=${category_slug}`,
         method: "GET",
       }),
+      forceRefetch: () => true,
+    }),
+    createCategory: build.mutation<
+      CreateCategoryResponse,
+      CreateCategoryRequest
+    >({
+      query: (body) => ({
+        url: "/category",
+        method: "POST",
+        body,
+      }),
+    }),
+    play: build.mutation<PlayResponse, PlayRequest>({
+      query: (body) => ({
+        url: "/play",
+        method: "POST",
+        body,
+      }),
+    }),
+    setScore: build.mutation<SetScoreResponse, SetScoreRequest>({
+      query: (body) => ({
+        url: "/score",
+        method: "POST",
+        invalidatesTags: ["category"],
+        body,
+      }),
     }),
   }),
 });
@@ -39,4 +71,7 @@ export const {
   useGetCategoriesQuery,
   useGetCategoryQuery,
   useGetcategoryValuesQuery,
+  useCreateCategoryMutation,
+  usePlayMutation,
+  useSetScoreMutation,
 } = categoryApi;

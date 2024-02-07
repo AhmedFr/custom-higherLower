@@ -1,6 +1,6 @@
 export type LoginResponse = {
-  access_token: string;
-  refresh_token: string;
+  accessToken: string;
+  refreshToken: string;
   username: string;
   email: string;
   image: string;
@@ -18,8 +18,8 @@ export type RegisterRequest = {
 };
 
 export type RegisterResponse = {
-  access_token: string;
-  refresh_token: string;
+  accessToken: string;
+  refreshToken: string;
   username: string;
   email: string;
   image: string;

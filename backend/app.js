@@ -74,9 +74,7 @@ app.use(function (err, req, res, next) {
 async function init() {
   try {
     await sequelize.authenticate();
-    await sequelize.sync({
-      force: true,
-    });
+    await sequelize.sync();
     console.log("Connection has been established successfully.");
     console.log("Synced models successfully.");
   } catch (error) {

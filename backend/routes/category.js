@@ -7,6 +7,7 @@ const User = require("../models/User");
 const Score = require("../models/Score");
 const Value = require("../models/Value");
 const Like = require("../models/Like");
+const { getGiphyUrl } = require("../utils/giphy");
 
 router.get("/", async function (req, res, next) {
   const category_slug = req.query.slug;
@@ -43,12 +44,19 @@ router.get("/", async function (req, res, next) {
       order: [["value", "DESC"]],
       limit: 5,
     });
-    const formattedScores = high_scores?.map((score) => {
-      return {
-        username: score.dataValues.User.dataValues.username ?? "test",
-        value: score.dataValues.value,
-      };
-    });
+    let formattedScores = [];
+    for (let i = 0; i < high_scores.length; i++) {
+      const user = await User.findOne({
+        where: {
+          id: high_scores[i].dataValues.user_id,
+        },
+        attributes: ["username"],
+      });
+      formattedScores.push({
+        username: user.dataValues.username,
+        value: high_scores[i].dataValues.value,
+      });
+    }
 
     const likes = await Like.count({
       where: {
@@ -63,12 +71,14 @@ router.get("/", async function (req, res, next) {
     });
 
     res.status(200).send({
+      id: category.dataValues.id,
       name: category.dataValues.name,
       description: category.dataValues.description,
       image: category.dataValues.image,
       likes: likes,
       createdAt: category.dataValues.createdAt,
       total_values,
+      metric: category.dataValues.metric,
       author: {
         username: author.dataValues.username,
         image: author.dataValues.image,
@@ -86,20 +96,14 @@ router.post("/", async function (req, res, next) {
     res.status(401).send("Unauthorized");
     return;
   }
-  const { name, description, image, default_image_provider, values } = req.body;
-  if (
-    !name ||
-    !description ||
-    !image ||
-    !default_image_provider ||
-    values.length < 10
-  ) {
+  const { name, description, image, values, metric } = req.body;
+  if (!name || !description || !image || !metric || values.length < 10) {
     res.status(400).send("Missing required information");
     return;
   }
 
-  if (name.length > 20 || name.length < 2) {
-    res.status(400).send("Name must be between 2 and 20 characters");
+  if (name.length > 50 || name.length < 2) {
+    res.status(400).send("Name must be between 2 and 50 characters");
     return;
   }
   if (description.length > 100 || description.length < 10) {
@@ -110,16 +114,13 @@ router.post("/", async function (req, res, next) {
     res.status(400).send("Invalid image");
     return;
   }
-  if (
-    default_image_provider !== "unsplash" &&
-    default_image_provider !== "giphy"
-  ) {
-    res.status(400).send("Invalid default_image_provider");
-    return;
-  }
 
   for (let i = 0; i < values.length; i++) {
-    if (!values[i].name || !values[i].value) {
+    if (
+      !values[i].name ||
+      values[i].value === null ||
+      values[i].value === undefined
+    ) {
       res
         .status(400)
         .send("Missing required information in values value number: " + i);
@@ -129,11 +130,8 @@ router.post("/", async function (req, res, next) {
       res.status(400).send("Value name must be between 2 and 50 characters");
       return;
     }
-    if (!values[i].image || !isValidUrl(values[i].image)) {
-      // Set image url using the default_image_provider
-    }
+    values[i].image = await getGiphyUrl(values[i].name);
   }
-
   const slug = name.toLowerCase().replace(/ /g, "-");
 
   try {
@@ -141,7 +139,8 @@ router.post("/", async function (req, res, next) {
       name,
       description,
       image: image,
-      default_image_provider,
+      default_image_provider: "giphy",
+      metric,
       slug,
       author_id: user.id,
     });

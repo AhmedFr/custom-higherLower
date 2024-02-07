@@ -8,7 +8,11 @@ const nextConfig = {
       },
       {
         protocol: "https",
-        hostname: "www.lequipe.fr",
+        hostname: "giphy.com",
+      },
+      {
+        protocol: "https",
+        hostname: "*.giphy.com",
       },
     ],
   },

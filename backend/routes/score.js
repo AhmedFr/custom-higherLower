@@ -11,7 +11,7 @@ router.post("/", async function (req, res, next) {
   }
 
   const score = req.body.score;
-  if (!score) {
+  if (score === null || score === undefined) {
     res.status(400).send("Score required");
     return;
   }

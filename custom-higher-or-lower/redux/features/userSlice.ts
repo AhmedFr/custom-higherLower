@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { RootState } from "@/redux/store";
 import { LoginResponse } from "@/types/user";
-import { useLoginMutation, userApi } from "@/redux/services/user";
+import { userApi } from "@/redux/services/user";
 
 export interface UserState {
   isLogged: boolean;
@@ -28,8 +28,8 @@ const loginReducer = (
   state.username = action.payload.username;
   state.email = action.payload.email;
   state.image = action.payload.image;
-  state.refreshToken = action.payload.refresh_token;
-  state.accessToken = action.payload.access_token;
+  state.refreshToken = action.payload.refreshToken;
+  state.accessToken = action.payload.accessToken;
   state.isLogged = true;
 };
 
@@ -41,6 +41,7 @@ export const userSlice = createSlice({
     logout: () => {
       return initialState;
     },
+    refresh: loginReducer,
   },
   extraReducers: (builder) => {
     builder
@@ -48,8 +49,8 @@ export const userSlice = createSlice({
         state.username = action.payload.username;
         state.email = action.payload.email;
         state.image = action.payload.image;
-        state.refreshToken = action.payload.refresh_token;
-        state.accessToken = action.payload.access_token;
+        state.refreshToken = action.payload.refreshToken;
+        state.accessToken = action.payload.accessToken;
         state.isLogged = true;
       })
       .addMatcher(
@@ -58,8 +59,8 @@ export const userSlice = createSlice({
           state.username = action.payload.username;
           state.email = action.payload.email;
           state.image = action.payload.image;
-          state.refreshToken = action.payload.refresh_token;
-          state.accessToken = action.payload.access_token;
+          state.refreshToken = action.payload.refreshToken;
+          state.accessToken = action.payload.accessToken;
           state.isLogged = true;
         },
       );

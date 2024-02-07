@@ -24,6 +24,13 @@ export const userApi = api.injectEndpoints({
         body,
       }),
     }),
+    refresh: build.mutation<LoginResponse, { refreshToken: string }>({
+      query: (body) => ({
+        url: `/auth/refresh`,
+        method: "POST",
+        body,
+      }),
+    }),
     forgotPassword: build.mutation<SimpleResponse, { email: string }>({
       query: (body) => ({
         url: `/auth/forgot-password`,

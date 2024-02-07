@@ -14,33 +14,28 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Textarea } from "@/components/ui/textarea";
-import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { Separator } from "@/components/ui/separator";
 import { useState } from "react";
 import { Clipboard, Plus, Trash } from "lucide-react";
 import { useEffect } from "react";
-
-const ImageProviderEnum = z.enum(["unsplash", "giphy"]);
-
-type Value = {
-  name: string;
-  value: number;
-  image_url?: string;
-};
+import { useCreateCategoryMutation } from "@/redux/services/category";
+import { UserItem } from "@/types/Category";
+import { useToast } from "@/components/ui/use-toast";
 
 const formSchema = z.object({
-  name: z.string().min(2).max(20),
+  name: z.string().min(2).max(50),
   description: z.string().min(2).max(100),
-  cover_image: z.string().url(),
+  image: z.string().url(),
+  metric: z.string().min(2).max(100),
   values: z.array(
     z.object({
       name: z.string().min(2).max(50),
       value: z.number().min(1).max(16),
-      image_url: z.string().url().optional(),
     }),
   ),
-  default_image_provider: ImageProviderEnum,
 });
+
+const MINIMUM_NUMBER_OF_VALUES = 10;
 
 export default function MakerPage() {
   const form = useForm<z.infer<typeof formSchema>>({
@@ -48,24 +43,52 @@ export default function MakerPage() {
     defaultValues: {
       name: "",
       description: "",
-      cover_image: "",
+      metric: "",
+      image: "",
       values: [],
-      default_image_provider: "unsplash",
     },
   });
-
   const emptyValue = {
     name: "",
     value: 0,
-    image_url: "",
   };
-  const [values, setValues] = useState<Value[]>([emptyValue]);
+  const [values, setValues] = useState<UserItem[]>([]);
+  const [JSONValues, setJSONValues] = useState<string>("{}");
+  const [createCategory] = useCreateCategoryMutation();
+  const { toast } = useToast();
 
-  // 2. Define a submit handler.
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    // Do something with the form values.
-    // ✅ This will be type-safe and validated.
-    console.log(values);
+  function onSubmit(formValues: z.infer<typeof formSchema>) {
+    let finaleValues = values;
+
+    if (values.length === 0) {
+      try {
+        const parsedValues = JSON.parse(JSONValues);
+        if (parsedValues.values) {
+          finaleValues = parsedValues.values;
+        }
+      } catch (error) {
+        if (error instanceof SyntaxError) {
+          toast({
+            title: "Invalid JSON",
+            description: "Make sure your JSON is valid",
+          });
+        }
+      }
+    }
+    if (finaleValues.length < MINIMUM_NUMBER_OF_VALUES) {
+      toast({
+        title: "Not enough values",
+        description: `You need at least ${MINIMUM_NUMBER_OF_VALUES} values`,
+      });
+      return;
+    }
+    createCategory({
+      name: formValues.name,
+      description: formValues.description,
+      metric: formValues.metric,
+      image: formValues.image,
+      values: finaleValues,
+    });
   }
 
   useEffect(() => {
@@ -77,8 +100,26 @@ export default function MakerPage() {
 
   function copyPrompt() {
     navigator.clipboard.writeText(
-      "Generate a list of 100 values for my category called:{name}, this will be used for a higher lower game, based on this metric: {}. Each value should have a name, a numerical value and an image url. The names should be between 2 and 20 characters long. The image urls should be valid urls using either unsplash or giphy.",
+      `Generate a list of 100 values for my category called:${form.getValues().name}, this will be used for a higher lower game, based on this metric: ${form.getValues().name}. Each value should have a name, a numerical value. The names should be between 2 and 20 characters long. This list must be generated in
+      JSON format fllowing this structure:
+      {
+        "values": [
+          {
+            "name": "Phineas and Ferb",
+            "value": 1,
+          },
+          {
+            "name": "Hack Club",
+            "value": 2,
+          }
+          ...
+        ]
+      }`,
     );
+    toast({
+      title: "Prompt copied",
+      description: "You can now paste it in your favorite AI tool",
+    });
   }
 
   return (
@@ -91,7 +132,7 @@ export default function MakerPage() {
           onSubmit={form.handleSubmit(onSubmit)}
           className="flex flex-col gap-8 py-8"
         >
-          <div className="flex gap-4">
+          <div className="grid grid-cols-2 gap-4">
             <FormField
               control={form.control}
               name="name"
@@ -99,10 +140,24 @@ export default function MakerPage() {
                 <FormItem className="w-96">
                   <FormLabel>Name</FormLabel>
                   <FormControl>
-                    <Input placeholder="shadcn" {...field} />
+                    <Input placeholder="Category" {...field} />
+                  </FormControl>
+                  <FormDescription>The name of your category.</FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="metric"
+              render={({ field }) => (
+                <FormItem className="w-96">
+                  <FormLabel>Metric</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Number of goals" {...field} />
                   </FormControl>
                   <FormDescription>
-                    This is your public display name.
+                    This is the metric that will be used to compare the values.
                   </FormDescription>
                   <FormMessage />
                 </FormItem>
@@ -115,49 +170,28 @@ export default function MakerPage() {
                 <FormItem className="w-96">
                   <FormLabel>Description</FormLabel>
                   <FormControl>
-                    <Textarea placeholder="shadcn" {...field} />
+                    <Textarea placeholder="A very fun category" {...field} />
                   </FormControl>
                   <FormDescription>
-                    This is your public display name.
+                    This is the description of your category, make it appealing.
                   </FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
             />
-          </div>
-          <div className="flex gap-4">
             <FormField
               control={form.control}
-              name="cover_image"
+              name="image"
               render={({ field }) => (
                 <FormItem className="w-96">
-                  <FormLabel>Cover image</FormLabel>
+                  <FormLabel>Image</FormLabel>
                   <FormControl>
-                    <Input placeholder="shadcn" {...field} />
+                    <Input placeholder="https://giphy.com/gif" {...field} />
                   </FormControl>
                   <FormDescription>
-                    This is your public display name.
-                  </FormDescription>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="default_image_provider"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Default image provider</FormLabel>
-                  <FormControl className="justify-start">
-                    <ToggleGroup type="single" defaultValue="unsplash">
-                      <ToggleGroupItem value="unsplash">
-                        Unsplash
-                      </ToggleGroupItem>
-                      <ToggleGroupItem value="giphy">Giphy</ToggleGroupItem>
-                    </ToggleGroup>
-                  </FormControl>
-                  <FormDescription>
-                    This is your public display name.
+                    This is the url of the gif that will be used to represent
+                    your category. Make sure to use a giphy link or it
+                    won&apos;t work.
                   </FormDescription>
                   <FormMessage />
                 </FormItem>
@@ -181,12 +215,10 @@ export default function MakerPage() {
     {
       "name": "Phineas and Ferb",
       "value": 1,
-      "image_url": "image_url"
     },
     {
       "name": "Hack Club",
       "value": 2,
-      "image_url": "image_url"
     }
     ...
   ]
@@ -194,24 +226,29 @@ export default function MakerPage() {
                 </pre>
               </div>
             </div>
-            <div className="flex flex-col gap-2">
-              <Input className="w-fit" type="file" placeholder="shadcn" />
-              <div className="border flex flex-col gap-3 w-80 border-slate-300 rounded-xl p-4">
-                <h3 className=" text-xl font-bold">Use AI:</h3>
-                <p className="text-sm text-slate-500">
-                  You can use AI to generate values for your category. Copy the
-                  prompt below and use it with your favorite AI tool, to help
-                  you create your perfect category.
-                </p>
-                <Button
-                  size="icon"
-                  className="self-end"
-                  type="button"
-                  onClick={copyPrompt}
-                >
-                  <Clipboard />
-                </Button>
-              </div>
+            <Textarea
+              onChange={(e) => {
+                setJSONValues(e.target.value);
+              }}
+              value={JSONValues}
+              className="w-96"
+              placeholder="Paste your json here"
+            />
+            <div className="border h-fit flex flex-col gap-3 w-80 border-slate-300 rounded-xl p-4">
+              <h3 className=" text-xl font-bold">Use AI:</h3>
+              <p className="text-sm text-slate-500">
+                You can use AI to generate values for your category. Copy the
+                prompt below and use it with your favorite AI tool, to help you
+                create your perfect category.
+              </p>
+              <Button
+                size="icon"
+                className="self-end"
+                type="button"
+                onClick={copyPrompt}
+              >
+                <Clipboard />
+              </Button>
             </div>
           </div>
 
@@ -240,10 +277,10 @@ export default function MakerPage() {
                       <FormItem>
                         <FormLabel>Name</FormLabel>
                         <FormControl>
-                          <Input placeholder="shadcn" {...field} />
+                          <Input placeholder="Messi" {...field} />
                         </FormControl>
                         <FormDescription>
-                          This is your public display name.
+                          This is the name of the value
                         </FormDescription>
                         <FormMessage />
                       </FormItem>
@@ -256,30 +293,10 @@ export default function MakerPage() {
                       <FormItem>
                         <FormLabel>Value</FormLabel>
                         <FormControl>
-                          <Input
-                            type="number"
-                            placeholder="shadcn"
-                            {...field}
-                          />
+                          <Input type="number" placeholder="100" {...field} />
                         </FormControl>
                         <FormDescription>
-                          This is your public display name.
-                        </FormDescription>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={form.control}
-                    name={`values.${index}.image_url`}
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Image URL</FormLabel>
-                        <FormControl>
-                          <Input placeholder="shadcn" {...field} />
-                        </FormControl>
-                        <FormDescription>
-                          This is your public display name.
+                          This is the numerical value of the value
                         </FormDescription>
                         <FormMessage />
                       </FormItem>
