@@ -4,8 +4,7 @@
   "private": true,
   "scripts": {
     "build": "webpack",
-    "prod": "node ./build/bundle.js",
-    "start": "node --env-file=.env ./bin/www",
+    "start": "node ./bin/www",
     "dev": "DEBUG=backend:* node ./bin/www",
     "format": "prettier --write \"**/*.js\""
   },
