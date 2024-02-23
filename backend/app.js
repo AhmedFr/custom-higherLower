@@ -26,7 +26,7 @@ var app = express();
 app.use(cors());
 
 const corsOptions = {
-  origin: "http://localhost:3000",
+  origin: process.env.FRONT_URL,
   credentials: true,
 };
 
@@ -73,6 +73,13 @@ app.use(function (err, req, res, next) {
 
 async function init() {
   try {
+    console.log("Connecting to the database...");
+    console.log(
+      "Connecting to host:",
+      process.env.DB_HOST,
+      " port:",
+      process.env.DB_PORT,
+    );
     await sequelize.authenticate();
     await sequelize.sync();
     console.log("Connection has been established successfully.");
