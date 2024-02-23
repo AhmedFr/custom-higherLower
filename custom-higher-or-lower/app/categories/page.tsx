@@ -74,6 +74,16 @@ export default function CategoriesPage() {
     refetch();
   }
 
+  function handleAscending() {
+    setOrder("ASC");
+    refetch();
+  }
+
+  function handleDescending() {
+    setOrder("DESC");
+    refetch();
+  }
+
   const createQueryString = useCallback(
     (name: string, value: string) => {
       const params = new URLSearchParams(searchParams.toString());
@@ -129,22 +139,12 @@ export default function CategoriesPage() {
               <FormField
                 name="order"
                 control={form.control}
-                render={({ field }) => (
+                render={() => (
                   <ToggleGroup value={order} type="single">
-                    <ToggleGroupItem
-                      onClick={() => {
-                        setOrder("ASC");
-                      }}
-                      value="ASC"
-                    >
+                    <ToggleGroupItem onClick={handleAscending} value="ASC">
                       <ArrowUp />
                     </ToggleGroupItem>
-                    <ToggleGroupItem
-                      onClick={() => {
-                        setOrder("DESC");
-                      }}
-                      value="DESC"
-                    >
+                    <ToggleGroupItem onClick={handleDescending} value="DESC">
                       <ArrowDown />
                     </ToggleGroupItem>
                   </ToggleGroup>

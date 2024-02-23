@@ -22,8 +22,23 @@ import { useCreateCategoryMutation } from "@/redux/services/category";
 import { UserItem } from "@/types/Category";
 import { useToast } from "@/components/ui/use-toast";
 import { useRouter } from "next/navigation";
+import { useAppSelector } from "@/redux/hooks";
+import { LoginScreen } from "@/app/maker/_components/LoginScreen";
 
 const MAX_INTEGER = 2147483640;
+const JSON_EXAMPLE = `{
+  "values": [
+    {
+      "name": "Phineas and Ferb",
+      "value": 1,
+    },
+    {
+      "name": "Hack Club",
+      "value": 2,
+    }
+    ...
+  ]
+}`;
 
 const formSchema = z.object({
   name: z.string().min(2).max(50),
@@ -60,6 +75,7 @@ export default function MakerPage() {
   const [createCategory, { isLoading }] = useCreateCategoryMutation();
   const { toast } = useToast();
   const router = useRouter();
+  const user = useAppSelector((state) => state.user);
 
   function onSubmit(formValues: z.infer<typeof formSchema>) {
     let finaleValues = values;
@@ -108,6 +124,7 @@ export default function MakerPage() {
     try {
       const parsedValues = JSON.parse(JSONValues);
       if (parsedValues.values) {
+        setValues(parsedValues.values);
         form.setValue("values", parsedValues.values);
       }
     } catch (error) {
@@ -155,6 +172,10 @@ export default function MakerPage() {
       title: "Prompt copied",
       description: "You can now paste it in your favorite AI tool",
     });
+  }
+
+  if (!user.isLogged) {
+    return <LoginScreen />;
   }
 
   return (
@@ -324,21 +345,7 @@ export default function MakerPage() {
               </h3>
               <div className="border border-slate-300 rounded-xl p-4">
                 <h3 className=" text-xl font-bold">Example:</h3>
-                <pre className="text-sm text-slate-500">
-                  {`{
-  "values": [
-    {
-      "name": "Phineas and Ferb",
-      "value": 1,
-    },
-    {
-      "name": "Hack Club",
-      "value": 2,
-    }
-    ...
-  ]
-}`}
-                </pre>
+                <pre className="text-sm text-slate-500">{JSON_EXAMPLE}</pre>
               </div>
             </div>
             <Textarea

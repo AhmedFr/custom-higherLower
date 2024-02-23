@@ -48,8 +48,9 @@ categoriesRouter.get("/", async function (req, res, next) {
       },
       limit: limit,
       offset: (page - 1) * limit,
-      order: sequelize.col(sort_by, order),
+      order: [[sort_by, order]],
     });
+    console.log({ order, sort_by });
 
     for (let i = 0; i < categories.length; i++) {
       const user = await User.findOne({

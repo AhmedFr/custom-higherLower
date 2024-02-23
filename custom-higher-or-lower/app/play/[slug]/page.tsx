@@ -16,6 +16,8 @@ import {
 } from "@/redux/services/category";
 import { useEffect } from "react";
 import { Item } from "@/types/Item";
+import { useAppSelector } from "@/redux/hooks";
+import { useToast } from "@/components/ui/use-toast";
 
 export default function PlayPage({ params }: { params: { slug: string } }) {
   const [score, setScore] = useState(0);
@@ -26,6 +28,7 @@ export default function PlayPage({ params }: { params: { slug: string } }) {
   });
   const [nextItemIndex, setNextItemIndex] = useState(0);
   const [hasLost, setHasLost] = useState(false);
+  const user = useAppSelector((state) => state.user);
   const {
     data,
     isLoading: areValuesLoading,
@@ -41,6 +44,7 @@ export default function PlayPage({ params }: { params: { slug: string } }) {
   } = useGetCategoryQuery({ slug: params.slug });
   const [play] = usePlayMutation();
   const [setScoreMutation] = useSetScoreMutation();
+  const { toast } = useToast();
 
   useEffect(() => {
     if (data) {
@@ -72,10 +76,36 @@ export default function PlayPage({ params }: { params: { slug: string } }) {
             }
           } else {
             setHasLost(true);
+
+            if (!user.isLogged) {
+              toast({
+                title: "You need to be logged in to save your score",
+                description: "Login or create an account to save your score",
+              });
+            }
             setScoreMutation({
               category_id: fetchedCategory?.id || "",
               score: score,
-            });
+            })
+              .unwrap()
+              .then((payload) => {
+                if (!payload.success) {
+                  toast({
+                    title: "An error occurred",
+                    description: "Could not save your score",
+                  });
+                }
+                toast({
+                  title: "Score saved",
+                  description: "Your score has been saved",
+                });
+              })
+              .catch(() => {
+                toast({
+                  title: "Score not saved",
+                  description: "Are you logged in? if so try again later",
+                });
+              });
           }
         });
     }
@@ -104,21 +134,58 @@ export default function PlayPage({ params }: { params: { slug: string } }) {
             setScoreMutation({
               category_id: fetchedCategory?.id || "",
               score: score,
-            });
+            })
+              .unwrap()
+              .then((payload) => {
+                console.log({ payload });
+                if (!payload.success) {
+                  toast({
+                    title: "An error occurred",
+                    description: "Could not save your score",
+                  });
+                }
+                toast({
+                  title: "Score saved",
+                  description: "Your score has been saved",
+                });
+              })
+              .catch(() => {
+                toast({
+                  title: "Score not saved",
+                  description: "Are you logged in? if so try again later",
+                });
+              });
           }
         });
     }
   }
 
+  function handlePlayAgain() {
+    setScore(0);
+    setHasLost(false);
+    refetch();
+  }
+
   return (
     <main className="">
       {hasLost && (
-        <div className="flex flex-wrap justify-center items-center gap-4 min-h-screen">
-          <h2 className="text-2xl font-bold">
+        <div className="absolute top-20 bottom-0 right-0 left-0 z-10 text-white bg-black bg-opacity-80 flex flex-col pt-20  items-center gap-8 min-h-screen">
+          <h2 className="text-6xl font-bold">
             You lost! Your score was {score}
           </h2>
-          <Button className="w-fit" onClick={goToCategories}>
+          <Button
+            className="w-44 text-black"
+            variant="outline"
+            onClick={goToCategories}
+          >
             Go back to categories
+          </Button>
+          <Button
+            className="w-44 bg-lime-100 hover:bg-lime-200 text-black"
+            variant="outline"
+            onClick={handlePlayAgain}
+          >
+            Play again
           </Button>
         </div>
       )}
@@ -141,11 +208,6 @@ export default function PlayPage({ params }: { params: { slug: string } }) {
           {fetchedCategory?.name}
         </Link>
         <h2 className="text-2xl place-self-center font-bold">Score: {score}</h2>
-        {/* <h2 className="text-2xl place-self-end font-bold">
-          Highscore:{" "}
-          {isCategoryLoading && <Skeleton className="rounded-full w-2 h-2" />}{" "}
-          {!isCategoryLoading && fetchedCategory && 0}
-        </h2> */}
       </div>
       {areValuesLoading && <Skeleton className="h-96" />}
       {!areValuesLoading && data && (
@@ -174,45 +236,47 @@ export default function PlayPage({ params }: { params: { slug: string } }) {
               {fetchedCategory && fetchedCategory.metric}
             </p>
           </div>
-          <div className="relative flex items-center justify-center w-full h-[800px] flex-col gap-8">
-            <div className="absolute -z-10 top-0 left-0 right-0 bottom-0 w-full h-ful">
-              <Image
-                src={data.values[nextItemIndex].image}
-                fill
-                alt={data.values[nextItemIndex].name}
-                className="transition-opacity opacity-0 duration-[2s]"
-                onLoadingComplete={(image) => {
-                  image.classList.remove("opacity-0");
-                }}
-              />
+          {!hasLost && (
+            <div className="relative flex items-center justify-center w-full h-[800px] flex-col gap-8">
+              <div className="absolute -z-10 top-0 left-0 right-0 bottom-0 w-full h-ful">
+                <Image
+                  src={data.values[nextItemIndex].image}
+                  fill
+                  alt={data.values[nextItemIndex].name}
+                  className="transition-opacity opacity-0 duration-[2s]"
+                  onLoadingComplete={(image) => {
+                    image.classList.remove("opacity-0");
+                  }}
+                />
+              </div>
+              <div className="absolute -z-10 top-0 left-0 right-0 bottom-0 w-full h-ful bg-black bg-opacity-50" />
+              <h1 className="text-6xl font-bold text-white drop-shadow">
+                {data.values[nextItemIndex].name}
+              </h1>
+              <p className="text-xl font-bold text-white drop-shadow">has</p>
+              <div className="flex flex-col gap-2">
+                <Button
+                  onClick={handleHigher}
+                  size="lg"
+                  className="bg-emerald-500 hover:bg-emerald-400"
+                >
+                  Higher
+                  <ArrowBigUp />
+                </Button>
+                <Button
+                  onClick={handleLower}
+                  size="lg"
+                  className="bg-red-400 hover:bg-red-300"
+                >
+                  Lower
+                  <ArrowBigDown />
+                </Button>
+              </div>
+              <p className="text-xl font-bold text-white drop-shadow">
+                {fetchedCategory && fetchedCategory.metric}
+              </p>
             </div>
-            <div className="absolute -z-10 top-0 left-0 right-0 bottom-0 w-full h-ful bg-black bg-opacity-50" />
-            <h1 className="text-6xl font-bold text-white drop-shadow">
-              {data.values[nextItemIndex].name}
-            </h1>
-            <p className="text-xl font-bold text-white drop-shadow">has</p>
-            <div className="flex flex-col gap-2">
-              <Button
-                onClick={handleHigher}
-                size="lg"
-                className="bg-emerald-500 hover:bg-emerald-400"
-              >
-                Higher
-                <ArrowBigUp />
-              </Button>
-              <Button
-                onClick={handleLower}
-                size="lg"
-                className="bg-red-400 hover:bg-red-300"
-              >
-                Lower
-                <ArrowBigDown />
-              </Button>
-            </div>
-            <p className="text-xl font-bold text-white drop-shadow">
-              {fetchedCategory && fetchedCategory.metric}
-            </p>
-          </div>
+          )}
         </div>
       )}
     </main>

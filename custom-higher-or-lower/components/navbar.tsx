@@ -59,12 +59,12 @@ export function Navbar() {
                   <span>Maker</span>
                 </DropdownMenuItem>
               </Link>
-              <Link href="/profile">
+              {/* <Link href="/profile">
                 <DropdownMenuItem>
                   <User className="mr-2 h-4 w-4" />
                   <span>Profile</span>
                 </DropdownMenuItem>
-              </Link>
+              </Link> */}
               <button onClick={handleSignout} className="w-full">
                 <DropdownMenuItem className="focus:bg-red-100">
                   <LogOut className="mr-2 h-4 w-4" />

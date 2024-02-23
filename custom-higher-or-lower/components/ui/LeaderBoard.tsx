@@ -25,7 +25,7 @@ export function Leaderboard({ scores }: { scores: Score[] }) {
       <Separator orientation="horizontal" className="mb-2" />
       <div className="flex flex-col gap-2 ">
         {scores.map((score: Score, i) => (
-          <>
+          <div key={i}>
             <div
               key={i}
               className={
@@ -46,7 +46,7 @@ export function Leaderboard({ scores }: { scores: Score[] }) {
             ) : (
               ""
             )}
-          </>
+          </div>
         ))}
         {scores.length === 0 && (
           <div className="text-center text-gray-500">No scores yet</div>

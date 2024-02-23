@@ -6,19 +6,19 @@ const Score = require("../models/Score");
 router.post("/", async function (req, res, next) {
   const user = isAuthorized(req, res, next);
   if (!user) {
-    res.status(401).send("Not authorized");
+    res.status(401).send({ success: false, message: "Not authorized" });
     return;
   }
 
   const score = req.body.score;
   if (score === null || score === undefined) {
-    res.status(400).send("Score required");
+    res.status(400).send({ success: false, message: "Score required" });
     return;
   }
 
   const category_id = req.body.category_id;
   if (!category_id) {
-    res.status(400).send("Category id required");
+    res.status(400).send({ success: false, message: "Category id required" });
     return;
   }
 
@@ -31,7 +31,7 @@ router.post("/", async function (req, res, next) {
     });
 
     if (highScore && highScore.value > score) {
-      res.status(200).send("Score not saved");
+      res.status(200).send({ success: true, message: "Score not saved" });
       return;
     }
     if (highScore) {
@@ -45,9 +45,9 @@ router.post("/", async function (req, res, next) {
         value: score,
       });
     }
-    res.status(200).send("Score saved");
+    res.status(200).send({ success: true, message: "Score saved" });
   } catch (error) {
-    res.status(500).send("Could not save score");
+    res.status(500).send({ success: false, message: "Could not save score" });
   }
 });
 
