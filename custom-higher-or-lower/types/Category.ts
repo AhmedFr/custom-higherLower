@@ -67,7 +67,7 @@ export type CreateCategoryRequest = {
 
 export type CreateCategoryResponse = {
   success: boolean;
-  category: Category;
+  slug: string;
 };
 
 export type PlayRequest = {

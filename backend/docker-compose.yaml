@@ -3,7 +3,6 @@ services:
   db:
     image: postgres:latest
     container_name: db-higher-lower
-    restart: always
     env_file:
       - "./.env"
     volumes:

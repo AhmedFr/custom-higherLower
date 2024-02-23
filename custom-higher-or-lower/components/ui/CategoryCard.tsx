@@ -17,10 +17,10 @@ export function CategoryCard({
   return (
     <Link
       href={`/categories/${slug}`}
-      className="transition-all h-80 duration-300 border rounded-lg border-slate-300 shadow hover:shadow-lg py-2"
+      className="transition-all h-80 duration-300 border rounded-lg border-slate-300 shadow hover:shadow-lg pb-2"
     >
       <div className="relative w-full h-44">
-        <Image src={image} alt={name} fill className="w-full" />
+        <Image src={image} alt={name} fill className="w-full rounded-t-lg" />
       </div>
       <div className="px-4">
         <h3 className="text-lg truncate font-bold pt-1">{name}</h3>

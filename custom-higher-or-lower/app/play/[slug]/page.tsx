@@ -152,7 +152,15 @@ export default function PlayPage({ params }: { params: { slug: string } }) {
         <div className="flex justify-between items-center">
           <div className="relative items-center flex w-full h-[800px] justify-center flex-col gap-8">
             <div className="absolute -z-10 top-0 left-0 right-0 bottom-0 w-full h-full bg-black bg-opacity-50">
-              <Image src={currentItem.image} fill alt={currentItem.name} />
+              <Image
+                src={currentItem.image}
+                fill
+                alt={currentItem.name}
+                className="transition-opacity opacity-0 duration-[2s]"
+                onLoadingComplete={(image) => {
+                  image.classList.remove("opacity-0");
+                }}
+              />
             </div>
             <div className="absolute -z-10 top-0 left-0 right-0 bottom-0 w-full h-ful bg-black bg-opacity-50" />
             <h1 className="text-6xl font-bold text-white drop-shadow">
@@ -172,6 +180,10 @@ export default function PlayPage({ params }: { params: { slug: string } }) {
                 src={data.values[nextItemIndex].image}
                 fill
                 alt={data.values[nextItemIndex].name}
+                className="transition-opacity opacity-0 duration-[2s]"
+                onLoadingComplete={(image) => {
+                  image.classList.remove("opacity-0");
+                }}
               />
             </div>
             <div className="absolute -z-10 top-0 left-0 right-0 bottom-0 w-full h-ful bg-black bg-opacity-50" />

@@ -64,6 +64,13 @@ export const categoryApi = api.injectEndpoints({
         body,
       }),
     }),
+    like: build.mutation<SetScoreResponse, { category_id: string }>({
+      query: (body) => ({
+        url: "/like",
+        method: "POST",
+        body,
+      }),
+    }),
   }),
 });
 
@@ -74,4 +81,5 @@ export const {
   useCreateCategoryMutation,
   usePlayMutation,
   useSetScoreMutation,
+  useLikeMutation,
 } = categoryApi;
