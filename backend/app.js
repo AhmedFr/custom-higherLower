@@ -76,9 +76,11 @@ async function init() {
     console.log("Connecting to the database...");
     console.log(
       "Connecting to host:",
-      process.env.DB_HOST,
+      process.env.POSTGRES_HOST,
       " port:",
-      process.env.DB_PORT,
+      process.env.POSTGRES_PORT,
+      " user:",
+      process.env.POSTGRES_USER,
     );
     await sequelize.authenticate();
     await sequelize.sync();
