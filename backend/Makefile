@@ -3,7 +3,7 @@ PORT ?= 8080
 .PHONY: run
 run:
 	@echo "Running..."
-	docker-compose up
+	docker-compose up api
 
 .PHONY: build
 build:
@@ -20,3 +20,7 @@ clean:
 	@echo "Cleaning..."
 	docker-compose down --volumes --remove-orphans
 
+.PHONY: dev
+dev:
+	@echo "Running in dev mode..."
+	docker-compose up 

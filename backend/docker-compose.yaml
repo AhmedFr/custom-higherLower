@@ -11,10 +11,10 @@ services:
     ports:
       - 5432:5432
 
-  server:
+  api:
     build:
       context: .
-    container_name: server-higher-lower
+    container_name: api-higher-lower
     env_file:
       - ".env"
     ports:
