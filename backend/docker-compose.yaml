@@ -10,5 +10,17 @@ services:
       - db-higher-lower:/var/lib/postgresql/data
     ports:
       - 5432:5432
+
+  server:
+    build:
+      context: .
+    container_name: server-higher-lower
+    env_file:
+      - ".env"
+    ports:
+      - "${PORT}:${PORT}"
+    depends_on:
+      - db
+
 volumes:
   db-higher-lower:
