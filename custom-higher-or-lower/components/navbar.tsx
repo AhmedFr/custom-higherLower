@@ -9,7 +9,7 @@ import {
   DropdownMenuGroup,
   DropdownMenuItem,
 } from "@/components/ui/dropdown-menu";
-import { User, LogOut, PlusSquare } from "lucide-react";
+import { LogOut, PlusSquare } from "lucide-react";
 import { useAppSelector, useAppDispatch } from "@/redux/hooks";
 import { logout } from "@/redux/features/userSlice";
 import { useRouter } from "next/navigation";
@@ -28,13 +28,13 @@ export function Navbar() {
   }
 
   return (
-    <div className="absolute top-0 items-center h-20 left-0 px-10 py-4 right-0 flex justify-between">
+    <div className="absolute top-0 items-center h-20 left-0 px-5 lg:px-10 py-4 right-0 flex justify-between">
       <div className="flex items-end gap-2">
-        <Link className="text-2xl font-bold" href="/">
+        <Link className="text-lg lg:text-2xl font-bold" href="/">
           HigherOrLower
         </Link>
         <Link
-          className="text-lg hover:text-indigo-700 transition-all duration-75"
+          className="lg:text-lg hover:text-indigo-700 transition-all duration-75"
           href="/categories"
         >
           Categories

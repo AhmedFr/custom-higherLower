@@ -18,7 +18,7 @@ export function Leaderboard({ scores }: { scores: Score[] }) {
   };
 
   return (
-    <div className="border border-slate-300 w-96 h-fit rounded-xl">
+    <div className="border border-slate-300 w-full lg:w-96 h-fit rounded-xl">
       <div className="text-center bg-slate-900 text-white rounded-t-xl drop-shadow-blue text-2xl font-bold italic">
         Leaderboard
       </div>

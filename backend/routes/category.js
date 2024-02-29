@@ -9,6 +9,10 @@ const Value = require("../models/Value");
 const Like = require("../models/Like");
 const { getGiphyUrl } = require("../utils/giphy");
 
+const MINIMUM_NAME_LENGTH = 2;
+const MAXIMUM_NAME_LENGTH = 100;
+const MINIMUM_NUMBER_OF_VALUES = 10;
+
 router.get("/", async function (req, res, next) {
   const category_slug = req.query.slug;
   if (!category_slug) {
@@ -97,17 +101,17 @@ router.post("/", async function (req, res, next) {
     return;
   }
   const { name, description, image, values, metric } = req.body;
-  if (!name || !description || !image || !metric || values.length < 10) {
+  if (!name || !description || !image || !metric || values.length < MINIMUM_NUMBER_OF_VALUES) {
     res.status(400).send("Missing required information");
     return;
   }
 
-  if (name.length > 50 || name.length < 2) {
-    res.status(400).send("Name must be between 2 and 50 characters");
+  if (name.length > MAXIMUM_NAME_LENGTH || name.length < MINIMUM_NAME_LENGTH) {
+    res.status(400).send(`Name must be between ${MINIMUM_NAME_LENGTH} and ${MAXIMUM_NAME_LENGTH} characters`);
     return;
   }
-  if (description.length > 100 || description.length < 10) {
-    res.status(400).send("Description must be between 10 and 100 characters");
+  if (description.length > MAXIMUM_NAME_LENGTH || description.length < MINIMUM_NAME_LENGTH) {
+    res.status(400).send(`Description must be between ${MINIMUM_NAME_LENGTH} and ${MAXIMUM_NAME_LENGTH} characters`);
     return;
   }
   if (!isValidUrl(image)) {
@@ -126,8 +130,8 @@ router.post("/", async function (req, res, next) {
         .send("Missing required information in values value number: " + i);
       return;
     }
-    if (values[i].name.length > 50 || values[i].length < 2) {
-      res.status(400).send("Value name must be between 2 and 50 characters");
+    if (values[i].name.length > MAXIMUM_NAME_LENGTH || values[i].length < MINIMUM_NAME_LENGTH) {
+      res.status(400).send(`Value name must be between ${MINIMUM_NAME_LENGTH} and ${MAXIMUM_NAME_LENGTH} characters`);
       return;
     }
     values[i].image = await getGiphyUrl(values[i].name);
