@@ -56,7 +56,7 @@ function ForgotPasswordPage() {
 
   return (
     <div className="bg-gradient-to-b from-slate-400 min-h-svh to-amber-300 flex justify-center items-center">
-      <div className="w-96 h-fit border border-slate-200 p-4  shadow-xl rounded-xl bg-white ">
+      <div className="w-80 lg:w-96 h-fit border border-slate-200 p-4  shadow-xl rounded-xl bg-white ">
         <Form {...form}>
           <form
             className="flex flex-col gap-4"

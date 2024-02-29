@@ -169,8 +169,8 @@ export default function PlayPage({ params }: { params: { slug: string } }) {
   return (
     <main className="">
       {hasLost && (
-        <div className="absolute top-20 bottom-0 right-0 left-0 z-10 text-white bg-black bg-opacity-80 flex flex-col pt-20  items-center gap-8 min-h-screen">
-          <h2 className="text-6xl font-bold">
+        <div className="absolute top-20 bottom-0 right-0 left-0 z-10 text-white bg-black bg-opacity-80 flex flex-col pt-20 items-center gap-8">
+          <h2 className="text-2xl lg:text-6xl font-bold">
             You lost! Your score was {score}
           </h2>
           <Button
@@ -190,7 +190,7 @@ export default function PlayPage({ params }: { params: { slug: string } }) {
         </div>
       )}
       {isError && (
-        <div className="flex flex-wrap justify-center items-center gap-4 min-h-screen">
+        <div className="px-10 flex flex-wrap justify-center items-center gap-4 min-h-screen">
           <h2 className="text-2xl font-bold">
             Seems like this category does not exist (yet!)
           </h2>
@@ -199,7 +199,7 @@ export default function PlayPage({ params }: { params: { slug: string } }) {
           </Button>
         </div>
       )}
-      <div className="px-10 py-4 grid grid-cols-3 bg-slate-900 text-white">
+      <div className="px-10 py-4 flex justify-between lg:grid lg:grid-cols-3 bg-slate-900 text-white">
         <Link
           href={`/categories/${params.slug}`}
           className="text-2xl font-bold"
@@ -211,8 +211,8 @@ export default function PlayPage({ params }: { params: { slug: string } }) {
       </div>
       {areValuesLoading && <Skeleton className="h-96" />}
       {!areValuesLoading && data && (
-        <div className="flex justify-between items-center">
-          <div className="relative items-center flex w-full h-[800px] justify-center flex-col gap-8">
+        <div className="flex flex-col lg:flex-row justify-between items-center">
+          <div className="relative items-center flex w-full h-[325px] lg:h-[800px] justify-center flex-col gap-8">
             <div className="absolute -z-10 top-0 left-0 right-0 bottom-0 w-full h-full bg-black bg-opacity-50">
               <Image
                 src={currentItem.image}
@@ -225,11 +225,11 @@ export default function PlayPage({ params }: { params: { slug: string } }) {
               />
             </div>
             <div className="absolute -z-10 top-0 left-0 right-0 bottom-0 w-full h-ful bg-black bg-opacity-50" />
-            <h1 className="text-6xl font-bold text-white drop-shadow">
+            <h1 className="text-2xl lg:text-6xl font-bold text-white drop-shadow">
               {currentItem.name}
             </h1>
             <p className="text-xl font-bold text-white drop-shadow">has</p>
-            <h1 className="text-6xl font-bold text-white drop-shadow">
+            <h1 className="text-2xl lg:text-6xl font-bold text-white drop-shadow">
               {currentItem.value}
             </h1>
             <p className="text-xl font-bold text-white drop-shadow">
@@ -237,7 +237,7 @@ export default function PlayPage({ params }: { params: { slug: string } }) {
             </p>
           </div>
           {!hasLost && (
-            <div className="relative flex items-center justify-center w-full h-[800px] flex-col gap-8">
+            <div className="relative flex items-center justify-center w-full h-[320px] lg:h-[800px] flex-col gap-8">
               <div className="absolute -z-10 top-0 left-0 right-0 bottom-0 w-full h-ful">
                 <Image
                   src={data.values[nextItemIndex].image}
@@ -250,7 +250,7 @@ export default function PlayPage({ params }: { params: { slug: string } }) {
                 />
               </div>
               <div className="absolute -z-10 top-0 left-0 right-0 bottom-0 w-full h-ful bg-black bg-opacity-50" />
-              <h1 className="text-6xl font-bold text-white drop-shadow">
+              <h1 className="text-2xl lg:text-6xl font-bold text-white drop-shadow">
                 {data.values[nextItemIndex].name}
               </h1>
               <p className="text-xl font-bold text-white drop-shadow">has</p>

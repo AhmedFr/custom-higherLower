@@ -36,6 +36,7 @@ function RegisterPage() {
   const { toast } = useToast();
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
+    console.log({ values });
     try {
       await registerMutation(values)
         .unwrap()
@@ -59,7 +60,7 @@ function RegisterPage() {
 
   return (
     <main className="bg-gradient-to-b from-slate-300 min-h-svh to-pink-900 flex justify-center items-center">
-      <div className="w-96 h-fit border border-slate-200 flex flex-col p-4 gap-2 shadow-xl rounded-xl bg-white ">
+      <div className="w-80 lg:w-96 h-fit border border-slate-200 flex flex-col p-4 gap-2 shadow-xl rounded-xl bg-white ">
         <Form {...form}>
           <form
             className="flex flex-col gap-4"

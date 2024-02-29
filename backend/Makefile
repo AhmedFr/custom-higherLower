@@ -1,9 +1,19 @@
 PORT ?= 8080
 
+.PHONY: run_api
+run_api:
+	@echo "Running..."
+	docker-compose up api
+
+.PHONY: run_db
+run_db:
+	@echo "Running..."
+	docker-compose up db
+
 .PHONY: run
 run:
 	@echo "Running..."
-	docker-compose up api
+	docker-compose up
 
 .PHONY: build
 build:

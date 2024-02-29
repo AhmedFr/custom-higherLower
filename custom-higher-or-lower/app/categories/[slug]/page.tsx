@@ -20,7 +20,7 @@ export default function Page({ params }: { params: { slug: string } }) {
   const router = useRouter();
 
   const heroTextCss =
-    "w-72 h-16 bg-[length:200%_auto] italic px-2 font-extrabold bg-[linear-gradient(to_right,theme(colors.indigo.400),theme(colors.indigo.100),theme(colors.sky.400),theme(colors.fuchsia.400),theme(colors.sky.400),theme(colors.indigo.100),theme(colors.indigo.400))] text-2xl text-transparent  bg-clip-text animate-gradient";
+    "w-48 lg:w-72 gap-2 h-16 bg-[length:200%_auto] italic px-2 font-extrabold bg-[linear-gradient(to_right,theme(colors.indigo.400),theme(colors.indigo.100),theme(colors.sky.400),theme(colors.fuchsia.400),theme(colors.sky.400),theme(colors.indigo.100),theme(colors.indigo.400))] text-2xl text-transparent  bg-clip-text animate-gradient";
 
   const goToCategories = () => {
     router.push("/categories");
@@ -30,7 +30,7 @@ export default function Page({ params }: { params: { slug: string } }) {
     <main className="flex flex-col gap-32 py-8">
       {isLoading && <SkeletonCard />}
       {isError && (
-        <div className="flex flex-wrap justify-center items-center gap-4 min-h-screen">
+        <div className="px-10 flex flex-wrap justify-center items-center gap-4 min-h-screen">
           <h2 className="text-2xl font-bold">
             Seems like this category does not exist (yet!)
           </h2>
@@ -40,11 +40,11 @@ export default function Page({ params }: { params: { slug: string } }) {
         </div>
       )}
       {!isLoading && fetchedCategory && (
-        <div className="px-20 pt-16 gap-8 place-items-center grid grid-cols-3">
+        <div className="px-10 lg:px-20 pt-8 lg:pt-16 gap-8 place-items-center grid grid-cols-1 lg:grid-cols-3">
           <div className="w-full flex flex-col gap-2">
             <h1 className="text-4xl font-bold">{fetchedCategory.name}</h1>
             <p>{fetchedCategory.description}</p>
-            <div className="flex gap-2">
+            <div className="flex flex-wrap lg:flex-none gap-2">
               <Badge className="gap-1 items-center">
                 <User size={12} />
                 {fetchedCategory.author.username}
@@ -77,7 +77,7 @@ export default function Page({ params }: { params: { slug: string } }) {
               alt={fetchedCategory.name}
             />
           </div>
-          <div className="flex shadow-xl flex-col h-full text-white px-8 w-full py-8 rounded-lg justify-between items-center border border-slate-300 bg-gradient-to-b from-indigo-400 to-white">
+          <div className="flex shadow-xl flex-col gap-4 h-full text-white px-8 w-full py-8 rounded-lg justify-between items-center border border-slate-300 bg-gradient-to-b from-indigo-400 to-white">
             <h2 className="text-3xl text-center font-bold">Ready to play ?</h2>
             <Link
               className="bg-slate-900 rounded-xl"

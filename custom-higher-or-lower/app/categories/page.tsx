@@ -95,17 +95,14 @@ export default function CategoriesPage() {
   );
 
   return (
-    <main className="flex flex-col gap-32">
-      <div>
-        <h1 className="drop-shadow-blue text-9xl font-bold text-center">
-          Categories
-        </h1>
-      </div>
-
-      <div className="flex flex-col gap-8 px-40">
+    <main className="flex flex-col gap-16 lg:gap-32">
+      <h1 className="drop-shadow-blue text-6xl lg:text-9xl font-bold text-center">
+        Categories
+      </h1>
+      <div className="flex flex-col gap-8 px-8 lg:px-40">
         <Form {...form}>
           <form
-            className="flex justify-between"
+            className="flex flex-col lg:flex-row gap-4 justify-between"
             onSubmit={form.handleSubmit(handleSearch)}
           >
             <div className="flex gap-2">
@@ -118,7 +115,7 @@ export default function CategoriesPage() {
               />
               <Button type="submit">Search</Button>
             </div>
-            <div className="flex gap-8">
+            <div className="flex justify-between lg:justify-normal gap-8">
               <FormField
                 name="sort"
                 control={form.control}
@@ -153,17 +150,18 @@ export default function CategoriesPage() {
             </div>
           </form>
         </Form>
-        <div className="grid gap-2 grid-cols-4">
+        <div className="grid gap-2 grid-cols-1 lg:grid-cols-4">
           {isLoading
             ? Array.from({ length: 8 }, (_, i) => <SkeletonCard key={i} />)
             : data?.categories.map((category) => (
                 <CategoryCard key={category.id} {...category} />
               ))}
-          {!isLoading && data?.categories.length === 0 && (
-            <div className="h-80 text-center text-2xl font-bold col-span-4">
-              No categories found
-            </div>
-          )}
+          {!isLoading &&
+            (data?.categories.length === 0 || data === undefined) && (
+              <div className="h-80 text-center text-2xl font-bold lg:col-span-4">
+                No categories found
+              </div>
+            )}
         </div>
         <Pagination>
           <PaginationContent>
@@ -189,7 +187,7 @@ export default function CategoriesPage() {
       </div>
 
       <section className="flex justify-center pb-16">
-        <div className="bg-gradient-to-r items-center from-blue-600 to-white rounded-2xl w-2/3 border flex justify-between wfull px-20 shadow-xl py-10 border-slate-200">
+        <div className="bg-gradient-to-b lg:bg-gradient-to-r items-center from-blue-600 to-white rounded-2xl w-2/3 border flex flex-col lg:flex-row justify-between px-8 gap-4 lg:px-20 shadow-xl py-10 border-slate-200">
           <div>
             <h1 className="text-white text-xl font-bold">
               Did not found a category you like ?

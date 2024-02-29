@@ -179,8 +179,8 @@ export default function MakerPage() {
   }
 
   return (
-    <main className="px-20 py-16">
-      <h1 className="text-6xl font-bold drop-shadow-blue">
+    <main className="px-10 lg:px-20 py-16">
+      <h1 className="text-3xl lg:text-6xl font-bold drop-shadow-blue">
         Create your own category
       </h1>
       <Form {...form}>
@@ -188,13 +188,13 @@ export default function MakerPage() {
           onSubmit={form.handleSubmit(onSubmit)}
           className="flex flex-col gap-8 py-8"
         >
-          <div className="flex gap-4">
-            <div className="grid grid-cols-2 gap-4">
+          <div className="flex flex-col lg:flex-row gap-4">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
               <FormField
                 control={form.control}
                 name="name"
                 render={({ field }) => (
-                  <FormItem className="w-96">
+                  <FormItem className="w-full lg:w-96">
                     <FormLabel>Name</FormLabel>
                     <FormControl>
                       <Input placeholder="Category" {...field} />
@@ -210,7 +210,7 @@ export default function MakerPage() {
                 control={form.control}
                 name="metric"
                 render={({ field }) => (
-                  <FormItem className="w-96">
+                  <FormItem className="w-full lg:w-96">
                     <FormLabel>Metric</FormLabel>
                     <FormControl>
                       <Input placeholder="Number of goals" {...field} />
@@ -227,7 +227,7 @@ export default function MakerPage() {
                 control={form.control}
                 name="description"
                 render={({ field }) => (
-                  <FormItem className="w-96">
+                  <FormItem className="w-full lg:w-96">
                     <FormLabel>Description</FormLabel>
                     <FormControl>
                       <Textarea placeholder="A very fun category" {...field} />
@@ -244,7 +244,7 @@ export default function MakerPage() {
                 control={form.control}
                 name="image"
                 render={({ field }) => (
-                  <FormItem className="w-96">
+                  <FormItem className="w-full lg:w-96">
                     <FormLabel>Image</FormLabel>
                     <FormControl>
                       <Input placeholder="https://giphy.com/gif" {...field} />
@@ -258,11 +258,19 @@ export default function MakerPage() {
                   </FormItem>
                 )}
               />
-              <Button className="w-fit text-lg" type="submit" size="lg">
+              <Button
+                className="hidden lg:block w-fit text-lg"
+                type="submit"
+                size="lg"
+              >
                 Create
               </Button>
             </div>
-            <Separator orientation="vertical" className="h-96" />
+            <Separator
+              orientation="vertical"
+              className="hidden h-96 lg:block"
+            />
+            <Separator orientation="horizontal" className="w-full lg:hidden" />
             <div className="w-fit">
               <div className="flex items-center gap-2">
                 <h2 className="text-xl font-bold">Add value</h2>
@@ -278,7 +286,7 @@ export default function MakerPage() {
               </div>
               <div
                 id="values-div"
-                className="w-fit flex flex-col gap-2 items-center h-96 overflow-y-auto"
+                className="w-full lg:w-fit flex flex-col gap-2 items-center h-96 overflow-y-auto"
               >
                 {values.map((val, index) => (
                   <div className="flex gap-4 items-end" key={index}>
@@ -335,10 +343,12 @@ export default function MakerPage() {
               </div>
             </div>
           </div>
+          <Button className="lg:hidden w-fit text-lg" type="submit" size="lg">
+            Create
+          </Button>
+          <Separator orientation="horizontal" className="w-full" />
 
-          <Separator orientation="horizontal" />
-
-          <div className="flex gap-8">
+          <div className="flex flex-col lg:flex-row gap-8">
             <div className="flex flex-col gap-2">
               <h3 className=" text-xl font-bold">
                 Import all values from a JSON
@@ -353,11 +363,10 @@ export default function MakerPage() {
                 setJSONValues(e.target.value);
               }}
               value={JSONValues}
-              className="w-96"
               placeholder="Paste your json here"
             />
-            <div className="flex flex-col justify-between">
-              <div className="border h-fit flex flex-col gap-3 w-80 border-slate-300 rounded-xl p-4">
+            <div className="flex flex-col gap-4 justify-between">
+              <div className="border h-fit flex flex-col gap-3  border-slate-300 rounded-xl p-4">
                 <h3 className=" text-xl font-bold">Use AI:</h3>
                 <p className="text-sm text-slate-500">
                   You can use AI to generate values for your category. Copy the
@@ -378,8 +387,6 @@ export default function MakerPage() {
               </Button>
             </div>
           </div>
-
-          <Separator orientation="horizontal" />
         </form>
       </Form>
     </main>
