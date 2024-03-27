@@ -3,10 +3,6 @@
 
 A website to play higher or lower with any category you want
 
-
-![Logo](custom-higher-or-lower/public/logo.png)
-
-
 ## Features
 
 - Play higher or lower game
