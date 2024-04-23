@@ -49,7 +49,7 @@ function RegisterPage() {
       console.error(error);
       toast({
         title: "Invalid credentials",
-        description: "Make sure your email and password are correct",
+        description: "Make sure your email and password are valid",
       });
     }
   }

@@ -36,6 +36,16 @@ function LoginPage() {
   const { toast } = useToast();
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
+    const password = form.getValues("password");
+
+    if (password.length < 8) {
+      form.setError("password", {
+        type: "manual",
+        message: "Password must be at least 8 characters long",
+      });
+      return;
+    }
+
     try {
       await loginMutation(values)
         .unwrap()
