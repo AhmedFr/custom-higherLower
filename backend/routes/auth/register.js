@@ -3,7 +3,6 @@ var router = express.Router();
 const User = require("../../models/User");
 const bcrypt = require("bcrypt");
 const crypto = require("crypto");
-const { isPasswordValid } = require("../../utils/password");
 
 const {
   generateAccessToken,
@@ -14,8 +13,8 @@ router.post("/", async function (req, res, next) {
   try {
     const salt = await bcrypt.genSalt(10);
 
-    if (!isPasswordValid(req.body.password)) {
-      res.status(400).send("Invalid password format");
+    if (req.body.password.length < 8) {
+      res.status(400).send("Password must be at least 8 characters long");
       return;
     }
 
